@@ -1,41 +1,45 @@
-import numpy as np
+# analysis_vm.py - Análisis de Datos para Máquina Virtual (VM)
+
 import pandas as pd
-import matplotlib.pyplot as plt
 import seaborn as sns
-from sklearn.datasets import load_iris
+import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, confusion_matrix
 
-# Cargar el dataset Iris
-df = pd.DataFrame(load_iris().data, columns=load_iris().feature_names)
-df['species'] = load_iris().target
+# Cargar datos (Iris dataset)
+data = sns.load_dataset('iris')
 
-# Dividir en datos de entrenamiento y prueba
-X_train, X_test, y_train, y_test = train_test_split(
-    df.drop('species', axis=1), df['species'], test_size=0.3, random_state=42
-)
+# Exploración inicial de datos
+print("\nResumen de Datos:")
+print(data.describe())
+print("\nDistribución de las Especies:")
+print(data['species'].value_counts())
 
-# Entrenar el modelo
+# Visualización de datos
+sns.pairplot(data, hue='species')
+plt.savefig("iris_pairplot_vm.png")
+plt.show()
+
+# Preparación de datos para entrenamiento
+X = data.drop('species', axis=1)
+y = data['species']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# Entrenamiento del modelo
 model = RandomForestClassifier(n_estimators=100, random_state=42)
 model.fit(X_train, y_train)
 
-# Evaluar el modelo
+# Evaluación del modelo
 predictions = model.predict(X_test)
-print("\n=== Reporte de Clasificación ===")
+print("\nReporte de Clasificación:")
 print(classification_report(y_test, predictions))
 
-# Matriz de confusión
+# Matriz de Confusión
 cm = confusion_matrix(y_test, predictions)
-sns.heatmap(cm, annot=True, fmt="d", cmap="Blues")
-plt.title("Matriz de Confusión - Random Forest")
-plt.xlabel("Predicción")
-plt.ylabel("Actual")
+sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=model.classes_, yticklabels=model.classes_)
+plt.title("Matriz de Confusión (VM)")
+plt.savefig("confusion_matrix_vm.png")
 plt.show()
 
-# Importancia de características
-importance = model.feature_importances_
-features = df.drop('species', axis=1).columns
-sns.barplot(x=importance, y=features)
-plt.title("Importancia de Características")
-plt.show()
+print("\nAnálisis completado en VM.")
