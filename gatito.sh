@@ -17,27 +17,6 @@ echo " ( o.o )"
 echo " > ^ <"
 sleep 1
 
-echo ""
-echo "Método 2: con printf"
-printf "/\\_/\\\n(o.o)\n > ^ < \n"
-sleep 1
-
-echo ""
-echo "Método 3: con cat <<EOF"
-cat << EOF
-/\_/\
-(o.o)
-> ^ <
-EOF
-sleep 1
-
-echo ""
-echo "Método 4: desde variable"
-dibujo="
-/\_/\
-(o.o)
-> ^ <
-"
 echo "$dibujo"
 sleep 1
 
